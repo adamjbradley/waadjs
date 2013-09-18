@@ -19,22 +19,27 @@
     stsUrl = 'https://login.windows.net/' + appTenantDomainName + '/oauth2/token?api-version=1.0';
     */
 
-    postData = {
+    resource = encodeURIComponent(GRAPH_PRINCIPAL_ID + "/" + GRAPH_DOMAIN + "@" + appTenantDomainName);
+    client_id = encodeURIComponent(appPrincipalId + "@" + appTenantDomainName);
+    client_secret = encodeURIComponent(password);
+
+    data = {
         "grant_type": "client_credentials",
-        "resource": GRAPH_PRINCIPAL_ID + "/" + GRAPH_DOMAIN + "@" + appTenantDomainName,
-        "client_id": appPrincipalId + "@" + appTenantDomainName,
-        "client_secret": password,
+        "resource": resource,
+        "client_id": client_id,
+        "client_secret": client_secret
+    };        
+
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.66 Safari/537.36",
     }
-    
+
     $.ajax({
-        type: "POST",
-        beforeSend: function (request) {        
-            request.overrideMimeType("application/x-www-form-urlencoded");
-        },
+        type: "POST",        
+        headers: headers,
         url: OAUTH_URL,
-        data: encodeURIComponent(postData),
-        processData: true,
-        cache: false,
+        data: data,        
+        cache: false,        
         success: function (msg) {
             $("#results").append("The result =" + StringifyPretty(msg));
         },
