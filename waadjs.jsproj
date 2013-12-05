@@ -53,15 +53,25 @@
     <AppxManifest Include="package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <Content Include="default.html" />
+    <Content Include="js\datajs-1.0.3.js" />
+    <Content Include="js\Graph.js" />
+    <Content Include="js\jaydata-vsdoc.js" />
+    <Content Include="js\jaydata.js" />
+    <Content Include="js\knockout-2.3.0.js" />
+    <Content Include="js\knockout.js" />
+    <Content Include="js\knockout.min.js" />
+    <Content Include="js\oDataProvider.js" />
+    <Content Include="WAAD-graph.html" />
     <Content Include="images\logo.png" />
     <Content Include="images\smalllogo.png" />
     <Content Include="images\splashscreen.png" />
     <Content Include="images\storelogo.png" />
-    <Content Include="js\AuthorizationHelperForGraph.js" />
     <Content Include="js\default.js" />
     <Content Include="css\default.css" />
+    <Content Include="js\GraphHelper.js" />
     <Content Include="js\jquery-2.0.3.js" />
+    <Content Include="js\jquery.base64.js" />
+    <Content Include="default.html" />
     <None Include="waadjs_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>

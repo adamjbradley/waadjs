@@ -1,34 +1,78 @@
 ﻿<!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8" />
-    <title>waadjs</title>
-
-    <!-- WinJS references 
-    <link href="//Microsoft.WinJS.1.0/css/ui-dark.css" rel="stylesheet" />
-    <script src="//Microsoft.WinJS.1.0/js/base.js"></script>
-    <script src="//Microsoft.WinJS.1.0/js/ui.js"></script>
-    -->
-    
-    <!-- waadjs references
-    <link href="/css/default.css" rel="stylesheet" />
-    <script src="/js/default.js"></script>
-    -->
-
-    <!-- WAAD -->
-    <script src="js/AuthorizationHelperForGraph.js"></script>
-
-    <!-- jQuery -->
+    <title>WAAD</title>
     <script src="js/jquery-2.0.3.js"></script>
+    <script src="js/knockout-2.3.0.js"></script>
 
+    <script src="js/datajs-1.0.3.js"></script>
+    <script src="js/jaydata.js"></script>
+    <script src="js/oDataProvider.js"></script>
+    <script src="js/knockout.js"></script>
+
+    <script src="js/GraphHelper.js"></script>
+    <script src="js/Graph.js"></script>
+    
     <script>
-        result = getAuthorizationHelper('apactenant1.onmicrosoft.com', 'f8d72a64-534a-4f44-a89c-72c30e8cb0f2', '7qjerGywNYFko6uQV7suFne4eiHtmqDEIJf7rDsxJcQ=');
-        alert(result);
-    </script>
+        //Authentication
+        var token = '';       
 
+        //Directory Service
+        var waad = '';
+        var tenant = 'apactenant1.onmicrosoft.com';
+        //var apiversion = '2013-04-05';
+        var apiversion = '2013-11-08';
+
+        GraphHelper(tenant, 'ae1af1e5-b623-49a0-af78-fff049e5560b', 'Pq5A82ox8kISExHSI+YTtMdnjTGFJ06MsJcnfqmtdgM=');
+
+        function PrepareDirectoryService() {
+            waad = new Microsoft.WindowsAzure.ActiveDirectory.DirectoryDataService({
+                name: 'oData',
+                oDataServiceHost: 'https://graph.windows.net/' + tenant,
+                maxDataServiceVersion: '3.0',
+                dataServiceVersion: '3.0'
+            });
+
+            waad.onReady(function () {
+                //
+                waad.prepareRequest = function (request) {                    
+                    request[0].headers['Authorization'] = 'Bearer ' + token.access_token;                    
+                    request[0].headers['Accept'] = 'application/json;odata=verbose';
+                    request[0].headers['Accept-Encoding'] += 'identity';
+                    request[0].headers['Content-Type'] = 'application/json;odata=verbose';
+                    request[0].requestUri += '&api-version=' + apiversion;                    
+                };
+            });
+            
+            $(function () {
+                function GraphViewModel() {
+                    this.allUsers = ko.observableArray([]);
+                    waad.users
+                    //.skip(5)
+                    .take(1)
+                    .toArray(this.allUsers);
+                };
+
+                ko.applyBindings(new GraphViewModel);
+
+            });                                    
+        }                                        
+    </script>
 </head>
 <body>
-    <p>Content goes here</p>        
+    <table>
+            <thead>
+                <tr>
+                    <th>Display Name </th>
+                    <th>Mail Nickname</th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: allUsers ">
+                <tr>
+                    <td><a href="#" data-bind="text: displayName"></a></td>
+                    <td data-bind="text: mailNickname"></td>
+                </tr>
+            </tbody>
+        </table>
 </body>
-
 </html>
